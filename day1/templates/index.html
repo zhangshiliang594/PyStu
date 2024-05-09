@@ -1,0 +1,20 @@
+$def with (data)
+<div bordor="1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<h2 align="center" color="red">我的网站</h2>
+    <table border="1" align="center">
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>操作</th>
+    </tr>
+    <tr>
+    <td> id="$data.id" </td>
+    <td> $data.title </td>
+    <td> <a href="/delete?id=$data.id" class="btn btn-danger btn-xs">删除</a> </td>
+    </tr>
+</table>
+</div>
+<form method="post" action="add">
+<p><input type="text" name="title" /> <input type="submit" value="增加" /></p>
+</form>
