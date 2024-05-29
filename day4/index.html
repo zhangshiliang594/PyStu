@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    <script>
+        async function registerUser(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            // 获取表单数据
+            const username = document.getElementById('username').value;
+            const idNumber = document.getElementById('idNumber').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            // 准备请求体
+            const userData = {
+                username: username,
+                idNumber: idNumber,
+                phoneNumber: phoneNumber
+            };
+
+            // 发送POST请求
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`网络错误，状态码：${response.status}`);
+                }
+
+                const result = await response.json();
+                alert(result.message); // 显示后端返回的信息，实际应用中可以更优雅地处理
+            } catch (error) {
+                alert(`注册失败: ${error.message}`);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>用户注册</h2>
+    <form onsubmit="registerUser(event)">
+        <label for="username">姓名:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="idNumber">身份证号:</label>
+        <input type="text" id="idNumber" name="idNumber" pattern="[0-9]{17}[0-9|x|X]" title="请输入正确的身份证号" required>
+
+        <label for="phoneNumber">手机号:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{11}" title="请输入正确的11位手机号" required>
+
+        <button type="submit">提交</button>
+    </form>
+</body>
+</html>

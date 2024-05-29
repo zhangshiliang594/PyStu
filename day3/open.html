@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>用户注册</title>
+<!-- 引入Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">创建用户</h2>
+    <form id="createForm">
+        <div class="form-group">
+            <label for="name">姓名</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="idNumber">身份证号</label>
+            <input type="text" class="form-control" id="idNumber" name="idNumber" pattern="[0-9]{17}[0-9|X|x]" title="请输入正确的18位身份证号码" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">手机号</label>
+            <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{11}" title="请输入正确的111位手机号" required>
+        </div>
+        <div class="form-group">
+            <label for="apiUrl">服务接口地址</label>
+            <input type="text" class="form-control" id="apiUrl" placeholder="http://172.20.22.86:8035//esignpro/rest/account/apiAdd" required>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="createUser()">创建用户</button>
+    </form>
+    <div id="result" class="mt-3"></div>
+</div>
+
+<!-- 引入jQuery 和 Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.2.1.slim.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script>
+// 用户创建逻辑
+async function createUser() {
+    const name = document.getElementById('name').value;
+    const idNumber = document.getElementById('idNumber').value;
+    const phone = document.getElementById('phone').value;
+    const apiUrl = document.getElementById('apiUrl').value;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, idNumber, phone }),
+        });
+
+        if (!response.ok) throw new Error(`网络错误，状态码：${response.status}`);
+
+        const data = await response.json();
+        document.getElementById('result').innerHTML = `<div class="alert alert-success">用户创建成功！账号ID: ${data.id}</div>`;
+    } catch (error) {
+        document.getElementById('result').innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+    }
+}
+</script>
+</body>
+</html>
